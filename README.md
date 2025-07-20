@@ -17,7 +17,7 @@ LangGenie is an intelligent, user-friendly text translation app that supports *o
 
 ## 📸 Preview
 
-![LangGenie UI Screenshot](Files/img.png)
+![LangGenie UI Screenshot](./Files/img.png)
 
 ---
 
