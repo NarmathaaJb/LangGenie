@@ -16,6 +16,7 @@ LangGenie is an intelligent, user-friendly text translation app that supports *o
 ---
 
 ## 📸 Preview
+<img width="1918" height="981" alt="image" src="https://github.com/user-attachments/assets/d5df6d75-83d2-4281-8d42-7f694dc38808" />
 
 ![LangGenie UI Screenshot](./Files/img.png)
 
