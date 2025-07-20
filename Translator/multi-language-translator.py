@@ -28,20 +28,26 @@ def get_FLORES_code_from_language(language):
 
 
 # Translation function
-def translate_text(text, destination_language):
+def translate_text(source_language, text, destination_language):
     if not text.strip():
         return "Please enter text to translate."
 
+    src_code = get_FLORES_code_from_language(source_language)
     dest_code = get_FLORES_code_from_language(destination_language)
-    if not dest_code:
-        return "Unsupported language selected."
+
+    if not src_code or not dest_code:
+        return "Unsupported language(s) selected."
+
+    if src_code == dest_code:
+        return "Source and target languages are the same. Please choose different languages."
 
     translation = text_translator(
         text,
-        src_lang="eng_Latn",
+        src_lang=src_code,
         tgt_lang=dest_code
     )
     return translation[0]["translation_text"]
+
 
 
 # Clear previous Gradio apps (if re-running in notebook)
@@ -51,8 +57,10 @@ gr.close_all()
 demo = gr.Interface(
     fn=translate_text,
     inputs=[
-        gr.Textbox(label="🔤 Input Text in English", lines=6, placeholder="Type or paste your English text here..."),
-        gr.Dropdown(choices=sorted(language_map.keys()), label="🌐 Select Target Language")
+        gr.Dropdown(choices=sorted(language_map.keys()), label="🌍 Select Source Language"),
+        gr.Textbox(label="🔤 Input Text", lines=6, placeholder="Type or paste your text here..."),
+        gr.Dropdown(choices=sorted(language_map.keys()), label="🌐 Select Target Language"),
+
     ],
     outputs=[
         gr.Textbox(label="✅ Translated Output", lines=4)
