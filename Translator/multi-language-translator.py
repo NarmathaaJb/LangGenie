@@ -1,5 +1,6 @@
 import torch
 import gradio as gr
+import json
 
 from transformers import pipeline
 
@@ -15,7 +16,51 @@ text_translator = pipeline(
     model="facebook/nllb-200-distilled-600M",
     torch_dtype=torch.bfloat16
 )
-text = "Hello Mother."
 
-translation = text_translator(text, src_lang="eng_Latn", tgt_lang="tam_Taml")
-print(translation)
+# Load the JSON data from the file
+with open('../Files/language.json', 'r') as file:
+    language_data = json.load(file)
+
+language_map = {entry["Language"]: entry["FLORES-200 code"] for entry in language_data if "FLORES-200 code" in entry}
+
+
+def get_FLORES_code_from_language(language):
+    return language_map.get(language)
+
+
+# Translation function
+def translate_text(text, destination_language):
+    if not text.strip():
+        return "Please enter text to translate."
+
+    dest_code = get_FLORES_code_from_language(destination_language)
+    if not dest_code:
+        return "Unsupported language selected."
+
+    translation = text_translator(
+        text,
+        src_lang="eng_Latn",
+        tgt_lang=dest_code
+    )
+    return translation[0]["translation_text"]
+
+
+# Clear previous Gradio apps (if re-running in notebook)
+gr.close_all()
+
+# Build the Gradio Interface
+demo = gr.Interface(
+    fn=translate_text,
+    inputs=[
+        gr.Textbox(label="🔤 Input Text in English", lines=6, placeholder="Type or paste your English text here..."),
+        gr.Dropdown(choices=sorted(language_map.keys()), label="🌐 Select Target Language")
+    ],
+    outputs=[
+        gr.Textbox(label="✅ Translated Output", lines=4)
+    ],
+    title="🌍 LangGenie: AI-Powered Multilingual Translator",
+    description="🧙‍♂️ One message. Many voices. Translate your English text into 200+ global languages with Meta's NLLB-200 model. Powered by AI to break every language barrier."
+)
+
+# Launch the app
+demo.launch()
