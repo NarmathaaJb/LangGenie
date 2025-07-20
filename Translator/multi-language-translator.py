@@ -30,13 +30,13 @@ def get_FLORES_code_from_language(language):
 # Translation function
 def translate_text(source_language, text, destination_language):
     if not text.strip():
-        return "Please enter text to translate."
+        return "⚠️ Please enter text to translate."
 
     src_code = get_FLORES_code_from_language(source_language)
     dest_code = get_FLORES_code_from_language(destination_language)
 
     if not src_code or not dest_code:
-        return "Unsupported language(s) selected."
+        return "⚠️ Unsupported language(s) selected."
 
     if src_code == dest_code:
         return "Source and target languages are the same. Please choose different languages."
@@ -57,16 +57,17 @@ gr.close_all()
 demo = gr.Interface(
     fn=translate_text,
     inputs=[
-        gr.Dropdown(choices=sorted(language_map.keys()), label="🌍 Select Source Language"),
-        gr.Textbox(label="🔤 Input Text", lines=6, placeholder="Type or paste your text here..."),
-        gr.Dropdown(choices=sorted(language_map.keys()), label="🌐 Select Target Language"),
+        gr.Dropdown(choices=sorted(language_map.keys()), label="🌐 Select Source Language"),
+        gr.Textbox(label="⌨️ Input Text", lines=6, placeholder="Type or paste your text here..."),
+        gr.Dropdown(choices=sorted(language_map.keys()), label="🎯 Select Target Language"),
 
     ],
     outputs=[
-        gr.Textbox(label="✅ Translated Output", lines=4)
+        gr.Textbox(label="🤖 Translated Output", lines=4)
     ],
     title="🌍 LangGenie: AI-Powered Multilingual Translator",
-    description="🧙‍♂️ One message. Many voices. Translate your English text into 200+ global languages with Meta's NLLB-200 model. Powered by AI to break every language barrier."
+    description = "🧙‍♂️ **One message, Many voices.** LangGenie, lets you translate text between **200+ global languages** using Meta's powerful NLLB-200 model. "
+        "Powered by AI to break every language barrier."
 )
 
 # Launch the app
